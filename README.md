@@ -49,3 +49,7 @@ Este archivo es un script de aplicación web creado con Streamlit. Permite a los
 ¡Disfruta utilizando la aplicación de predicción de precios de viviendas!
 
 **Nota:** Asegúrate de que el archivo `trained_model.sav` generado por `endtoend.py` esté presente en el mismo directorio que `predictive_system.py` y `web.py` para que la aplicación web pueda cargar el modelo entrenado.
+
+Ejemplo de funcionamiento:
+<img width="477" alt="Screenshot 2023-09-21 at 18 18 40" src="https://github.com/gozale/endtoend/assets/124909575/81a6c9ef-1140-42dc-8927-b7bd5a95501a">
+
