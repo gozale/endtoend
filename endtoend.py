@@ -258,7 +258,8 @@ grid_search = GridSearchCV(forest_reg, param_grid, cv=5,
                            return_train_score=True)
 grid_search.fit(housing_prepared, housing_labels)
 
-#print(grid_search.best_estimator_)
+print("Grid search 1")
+print(grid_search.best_estimator_)
 
 cvres = grid_search.cv_results_
 '''for mean_score, params in zip(cvres["mean_test_score"], cvres["params"]):
@@ -282,6 +283,10 @@ print(final_rmse)'''
 
 # Crear y entrenar el modelo RandomForestRegressor
 final_model2 = RandomForestRegressor(n_estimators=30, max_features=6)
+scores = cross_val_score(final_model2, housing_prepared, housing_labels, scoring="neg_mean_squared_error", cv=10)
+finalmodel2_rmse = np.sqrt(-scores)
+print(finalmodel2_rmse) #cross_val_score correción
+
 final_model2.fit(housing_prepared, housing_labels)
 final_predictions2 = final_model2.predict(x_test_prepared)
 
@@ -303,3 +308,69 @@ import pickle
 filename='trained_model.sav'
 pickle.dump(final_model2, open(filename, 'wb'))
 
+#Tarea (Funcionó mejor con random forest regressor)
+
+'''
+################################LinearRegression###############################
+
+param_grid_linear_regression = [
+    {'fit_intercept': [True, False]}
+]
+
+final_model2_1 = LinearRegression()
+final_model2_1.fit(housing_prepared, housing_labels)
+final_predictions2_1 = final_model2_1.predict(x_test_prepared)
+
+grid_search_linear_regression = GridSearchCV(final_model2_1, param_grid_linear_regression, cv=5,
+                                            scoring='neg_mean_squared_error',
+                                            verbose=2, n_jobs=-1)
+grid_search_linear_regression.fit(housing_prepared, housing_labels)
+
+print("Grid search 2")
+print(grid_search_linear_regression.best_estimator_)
+
+final_mse2_1 = mean_squared_error(y_test, final_predictions2_1)
+final_rmse2_1 = np.sqrt(final_mse2_1)
+#print(final_rmse2_1)
+
+# Para calcular el intervalo de confianza utilizando una distribución t
+confidence = 0.95
+squared_errors2 = (final_predictions2_1 - y_test) ** 2
+confidence_interval2 = np.sqrt(stats.t.interval(confidence, len(squared_errors2) - 1,
+                                               loc=squared_errors2.mean(),
+                                               scale=stats.sem(squared_errors2)))
+#print(confidence_interval2)
+'''
+'''
+###############################DecisionTreeRegressor###############################
+
+param_grid_decision_tree = [
+    {'max_depth': [None, 10, 20, 30], 'min_samples_split': [2, 5, 10],
+     'min_samples_leaf': [1, 2, 4]}
+]
+
+# Crear un modelo de regresión de árbol de decisión
+final_model2_2 = DecisionTreeRegressor(random_state=42)  # Puedes ajustar otros hiperparámetros si lo deseas
+final_model2_2.fit(housing_prepared, housing_labels)
+final_predictions2_2 = final_model2_2.predict(x_test_prepared)
+
+final_mse2_2 = mean_squared_error(y_test, final_predictions2_2)
+final_rmse2_2 = np.sqrt(final_mse2_2)
+#print(final_rmse2)
+
+grid_search_tree = GridSearchCV(tree_reg, param_grid_decision_tree, cv=5,
+                                scoring='neg_mean_squared_error',
+                                verbose=2, n_jobs=-1)
+grid_search_tree.fit(housing_prepared, housing_labels)
+
+print("Grid search 3")
+print(grid_search_tree.best_estimator_)
+
+# Para calcular el intervalo de confianza utilizando una distribución t
+confidence = 0.95
+squared_errors_2 = (final_predictions2_2 - y_test) ** 2
+confidence_interval_2 = np.sqrt(stats.t.interval(confidence, len(squared_errors_2) - 1,
+                                               loc=squared_errors_2.mean(),
+                                               scale=stats.sem(squared_errors_2)))
+#print(confidence_interval_2)
+'''
